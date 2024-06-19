@@ -6,7 +6,7 @@ const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const authInfo = { user, loading };
   return (
-    <AuthContext.Provider value={authInfo}>{Children}</AuthContext.Provider>
+    <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>
   );
 };
 export default AuthProvider;
