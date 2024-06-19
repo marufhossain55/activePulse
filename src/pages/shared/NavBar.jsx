@@ -1,8 +1,30 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
+const
 
 const NavBar = () => {
   const [isToggleOpen, setIsToggleOpen] = useState(false);
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setIsDropdownOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   const navClassName =
     'flex items-center gap-1 py-4 transition-colors duration-300 hover:text-emerald-500 focus:text-emerald-600 focus:outline-none focus-visible:outline-none lg:px-4 ';
 
@@ -149,6 +171,64 @@ const NavBar = () => {
               >
                 <span>Login</span>
               </Link>
+            </div>
+            <div
+              className="ml-auto flex items-center px-6 lg:ml-0 lg:p-0 relative"
+              ref={dropdownRef}
+            >
+              {/* Avatar */}
+              <div
+                onClick={toggleDropdown}
+                className="relative inline-flex h-10 w-10 items-center justify-center rounded-full text-white cursor-pointer"
+              >
+                <img
+                  src="https://i.pravatar.cc/40?img=35"
+                  alt="user name"
+                  title="user name"
+                  width="40"
+                  height="40"
+                  className="max-w-full rounded-full"
+                />
+                <span className="absolute bottom-0 right-0 inline-flex items-center justify-center gap-1 rounded-full border-2 border-white bg-pink-500 p-1 text-sm text-white">
+                  <span className="sr-only"> 7 new emails </span>
+                </span>
+              </div>
+              {/* End Avatar */}
+
+              {/* Dropdown Menu */}
+              {isDropdownOpen && (
+                <div className="absolute left-0 top-full w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+                  <div
+                    className="py-1"
+                    role="menu"
+                    aria-orientation="vertical"
+                    aria-labelledby="options-menu"
+                  >
+                    <a
+                      href="#"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                      role="menuitem"
+                    >
+                      Profile
+                    </a>
+                    <a
+                      href="#"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                      role="menuitem"
+                    >
+                      Settings
+                    </a>
+                    <a
+                      href="#"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                      role="menuitem"
+                    >
+                      Logout
+                    </a>
+                  </div>
+                </div>
+              )}
+              {/* End Dropdown Menu */}
             </div>
           </nav>
         </div>

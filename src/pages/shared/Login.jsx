@@ -1,4 +1,15 @@
+import useAuth from '../../hooks/useAuth';
+
 const Login = () => {
+  const { singInUser, googleSignIn } = useAuth();
+
+  const handleSocialLogin = (socialProvider) => {
+    socialProvider().then((result) => {
+      if (result.user) {
+        alert('login successfully');
+      }
+    });
+  };
   return (
     <div className="flex  items-center h-screen">
       <div className="w-full max-w-sm p-6 m-auto mx-auto bg-white rounded-lg shadow-md dark:bg-gray-800">
@@ -68,6 +79,7 @@ const Login = () => {
 
         <div className="flex items-center mt-6 -mx-2">
           <button
+            onClick={() => handleSocialLogin(googleSignIn)}
             type="button"
             className="flex items-center justify-center w-full px-6 py-2 mx-2 text-sm font-medium text-white transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:bg-blue-400 focus:outline-none"
           >
