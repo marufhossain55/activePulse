@@ -47,7 +47,6 @@ const NavBar = () => {
               aria-label="WindUI logo"
               aria-current="page"
               className="flex items-center gap-2 whitespace-nowrap py-3 text-lg focus:outline-none lg:flex-1"
-              href="javascript:void(0)"
             >
               <svg
                 width="300"
