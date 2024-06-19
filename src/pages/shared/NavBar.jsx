@@ -4,8 +4,16 @@ import useAuth from '../../hooks/useAuth';
 
 const NavBar = () => {
   const { user, logOut } = useAuth();
+
+  const handleLogOut = () => {
+    logOut()
+      .then(() => {})
+      .catch((err) => console.log(err));
+  };
+
   const [isToggleOpen, setIsToggleOpen] = useState(false);
 
+  //<--------------------------->
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -26,6 +34,7 @@ const NavBar = () => {
     };
   }, []);
 
+  //<--------------------->
   const navClassName =
     'flex items-center gap-1 py-4 transition-colors duration-300 hover:text-emerald-500 focus:text-emerald-600 focus:outline-none focus-visible:outline-none lg:px-4 ';
 
@@ -214,6 +223,7 @@ const NavBar = () => {
                           Settings
                         </a>
                         <a
+                          onClick={handleLogOut}
                           href="#"
                           className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                           role="menuitem"
