@@ -70,16 +70,18 @@ const NavBar = () => {
           <span>All Classes page</span>
         </NavLink>
       </li>
-      <li role="none" className="flex items-stretch ">
-        <NavLink
-          to="/"
-          role="menuitem"
-          aria-haspopup="false"
-          className={`${navClassName} `}
-        >
-          <span>Dashboard</span>
-        </NavLink>
-      </li>
+      {user && (
+        <li role="none" className="flex items-stretch ">
+          <NavLink
+            to="/"
+            role="menuitem"
+            aria-haspopup="false"
+            className={`${navClassName} `}
+          >
+            <span>Dashboard</span>
+          </NavLink>
+        </li>
+      )}
 
       <li role="none" className="flex items-stretch">
         <NavLink
