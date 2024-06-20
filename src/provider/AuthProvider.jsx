@@ -23,13 +23,13 @@ const AuthProvider = ({ children }) => {
 
   const createUser = (email, password) => {
     setLoading(true);
-    createUserWithEmailAndPassword(auth, email, password);
+    return createUserWithEmailAndPassword(auth, email, password);
   };
 
   //signIn user
   const signIn = (email, password) => {
     setLoading(true);
-    return signInWithEmailAndPassword(email, password);
+    return signInWithEmailAndPassword(auth, email, password);
   };
 
   //google singIn

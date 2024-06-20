@@ -50,6 +50,16 @@ const NavBar = () => {
           <span>Home</span>
         </NavLink>
       </li>
+      <li role="none" className="flex items-stretch ">
+        <NavLink
+          to="/"
+          role="menuitem"
+          aria-haspopup="false"
+          className={`${navClassName} `}
+        >
+          <span>All Trainer Page</span>
+        </NavLink>
+      </li>
 
       <li role="none" className="flex items-stretch">
         <a
