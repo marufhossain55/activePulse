@@ -60,15 +60,35 @@ const NavBar = () => {
           <span>All Trainer Page</span>
         </NavLink>
       </li>
+      <li role="none" className="flex items-stretch ">
+        <NavLink
+          to="/"
+          role="menuitem"
+          aria-haspopup="false"
+          className={`${navClassName} `}
+        >
+          <span>All Classes page</span>
+        </NavLink>
+      </li>
+      <li role="none" className="flex items-stretch ">
+        <NavLink
+          to="/"
+          role="menuitem"
+          aria-haspopup="false"
+          className={`${navClassName} `}
+        >
+          <span>Dashboard</span>
+        </NavLink>
+      </li>
 
       <li role="none" className="flex items-stretch">
-        <a
+        <NavLink
           role="menuitem"
           aria-haspopup="false"
           className={`${navClassName} mr-8`}
         >
-          <span>About</span>
-        </a>
+          <span>Forums</span>
+        </NavLink>
       </li>
     </>
   );
@@ -111,7 +131,8 @@ const NavBar = () => {
                   fill="rgba(255,255,255,.2)"
                 />
               </svg>
-              Brand
+              Active <br />
+              Pulse
             </a>
             {/*      <!-- Mobile trigger --> */}
             <button
