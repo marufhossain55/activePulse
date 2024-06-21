@@ -3,8 +3,10 @@ import useAuth from '../hooks/useAuth';
 import { Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import Swal from 'sweetalert2';
+import useAxiosPublic from '../hooks/useAxiosPublic';
 
 const Register = () => {
+  const axiosPublic = useAxiosPublic();
   const { createUser, updateUserProfile } = useAuth();
   const navigate = useNavigate();
   const {
@@ -16,37 +18,29 @@ const Register = () => {
 
   const onSubmit = (data) => {
     const { email, password, fullName, image } = data;
-    // if (password.length < 6) {
-    //   return alert('password should be 6 digit');
-    // }
-    // if (!/[A-Z]/.test(password)) {
-    //   return alert('You Must use an uppercase in the password');
-    // }
-
-    // if (!/[a-z]/.test(password)) {
-    //   return alert('You Must use a Lowercase in the password');
-    // }
+    console.log(data);
     //create user and update profile
-    createUser(email, password).then(() => {
+    createUser(email, password).then((result) => {
+      const loggedUser = result.user;
+      console.log(loggedUser);
       updateUserProfile(fullName, image).then(() => {
-        // Navigate(from);
-        reset();
-        Swal.fire({
-          title: 'User created successfully',
-          showClass: {
-            popup: `
-              animate__animated
-              animate__fadeInUp
-              animate__faster
-            `,
-          },
-          hideClass: {
-            popup: `
-              animate__animated
-              animate__fadeOutDown
-              animate__faster
-            `,
-          },
+        //create user entry in database
+        const userInfo = {
+          fullName,
+          email,
+        };
+        axiosPublic.post('/users', userInfo).then((res) => {
+          if (res.data.insertedId) {
+            console.log('user added to the database');
+            reset();
+            Swal.fire({
+              position: 'top-end',
+              icon: 'success',
+              title: 'user created successfully',
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          }
         });
         navigate('/');
       });
@@ -95,9 +89,9 @@ const Register = () => {
                   type="text"
                   className="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
                   placeholder="name"
-                  {...register('FullName', { required: true })}
+                  {...register('fullName', { required: true })}
                 />
-                {errors.FullName && (
+                {errors.fullName && (
                   <span className="text-red-500">This field is required</span>
                 )}
               </div>
