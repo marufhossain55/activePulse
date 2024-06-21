@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
 import { Helmet } from 'react-helmet';
 import { useForm } from 'react-hook-form';
@@ -6,7 +6,10 @@ import Swal from 'sweetalert2';
 
 const Login = () => {
   const { signIn, googleSignIn } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
 
+  const from = location.state?.from?.pathName || '/';
   const {
     register,
     handleSubmit,
@@ -37,6 +40,7 @@ const Login = () => {
             },
           });
           //   navigate(from);
+          navigate(from, { replace: true });
         }
       })
       .catch((error) => {
@@ -65,6 +69,7 @@ const Login = () => {
             `,
           },
         });
+        navigate(from, { replace: true });
       }
     });
   };

@@ -1,13 +1,16 @@
 import { useForm } from 'react-hook-form';
 import useAuth from '../hooks/useAuth';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
+import Swal from 'sweetalert2';
 
 const Register = () => {
   const { createUser, updateUserProfile } = useAuth();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm();
 
@@ -27,8 +30,26 @@ const Register = () => {
     createUser(email, password).then(() => {
       updateUserProfile(fullName, image).then(() => {
         // Navigate(from);
+        reset();
+        Swal.fire({
+          title: 'User created successfully',
+          showClass: {
+            popup: `
+              animate__animated
+              animate__fadeInUp
+              animate__faster
+            `,
+          },
+          hideClass: {
+            popup: `
+              animate__animated
+              animate__fadeOutDown
+              animate__faster
+            `,
+          },
+        });
+        navigate('/');
       });
-      alert('registration successful');
     });
   };
   return (

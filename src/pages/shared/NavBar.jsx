@@ -52,22 +52,22 @@ const NavBar = () => {
       </li>
       <li role="none" className="flex items-stretch ">
         <NavLink
-          to="/"
+          to="/allTrainer"
           role="menuitem"
           aria-haspopup="false"
           className={`${navClassName} `}
         >
-          <span>All Trainer Page</span>
+          <span>All Trainer</span>
         </NavLink>
       </li>
       <li role="none" className="flex items-stretch ">
         <NavLink
-          to="/"
+          to="/allClasses"
           role="menuitem"
           aria-haspopup="false"
           className={`${navClassName} `}
         >
-          <span>All Classes page</span>
+          <span>All Classes</span>
         </NavLink>
       </li>
       {user && (
@@ -85,6 +85,7 @@ const NavBar = () => {
 
       <li role="none" className="flex items-stretch">
         <NavLink
+          to="/forums"
           role="menuitem"
           aria-haspopup="false"
           className={`${navClassName} mr-8`}
