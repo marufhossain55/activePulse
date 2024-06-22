@@ -18,16 +18,17 @@ const Register = () => {
 
   const onSubmit = (data) => {
     const { email, password, fullName, image } = data;
-    console.log(data);
+    // console.log(data);
     //create user and update profile
     createUser(email, password).then((result) => {
       const loggedUser = result.user;
-      console.log(loggedUser);
+      // console.log(loggedUser);
       updateUserProfile(fullName, image).then(() => {
         //create user entry in database
         const userInfo = {
-          fullName,
+          name: fullName,
           email,
+          role: 'member',
         };
         axiosPublic.post('/users', userInfo).then((res) => {
           if (res.data.insertedId) {

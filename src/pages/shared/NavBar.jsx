@@ -73,7 +73,7 @@ const NavBar = () => {
       {user && (
         <li role="none" className="flex items-stretch ">
           <NavLink
-            to="/"
+            to="dashboard"
             role="menuitem"
             aria-haspopup="false"
             className={`${navClassName} `}

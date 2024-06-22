@@ -19,6 +19,7 @@ import Profile from '../pages/dashboard/Profile';
 import RecommendedClasses from '../pages/dashboard/RecommendedClasses';
 import AllNewsletterSubscribers from '../pages/dashboard/AllNewsletterSubscribers';
 import AddNewForum from '../pages/dashboard/AddNewForum';
+import PrivateRoute from './PrivateRoute';
 
 export const router = createBrowserRouter([
   {
@@ -51,7 +52,11 @@ export const router = createBrowserRouter([
   },
   {
     path: 'dashboard',
-    element: <DashBoard />,
+    element: (
+      <PrivateRoute>
+        <DashBoard />
+      </PrivateRoute>
+    ),
     children: [
       {
         path: 'allNewsletterSubscribers',

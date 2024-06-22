@@ -3,9 +3,11 @@ import useAuth from '../../hooks/useAuth';
 import { Helmet } from 'react-helmet';
 import { useForm } from 'react-hook-form';
 import Swal from 'sweetalert2';
+import useAxiosPublic from '../../hooks/useAxiosPublic';
 
 const Login = () => {
   const { signIn, googleSignIn } = useAuth();
+  const axiosPublic = useAxiosPublic();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -52,6 +54,15 @@ const Login = () => {
   const handleSocialLogin = (socialProvider) => {
     socialProvider().then((result) => {
       if (result.user) {
+        const userInfo = {
+          email: result.user?.email,
+          name: result.user?.displayName,
+          role: 'member',
+        };
+
+        axiosPublic.post('/users', userInfo).then((res) => {
+          console.log(res.data);
+        });
         Swal.fire({
           title: 'Login successful',
           showClass: {

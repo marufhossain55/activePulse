@@ -1,44 +1,10 @@
 import { NavLink, Outlet } from 'react-router-dom';
 
 const DashBoard = () => {
+  const isAdmin = true;
   return (
     <div className="flex container mx-auto">
-      {/* <div className="w64 min-h-screen bg-green-500">
-        <ul className="text-white">
-          <li>
-            <NavLink to="allTrainers">All Trainers</NavLink>
-          </li>
-          <li>
-            <NavLink to="appliedTrainer">Applied Trainer</NavLink>
-          </li>
-
-          <li>
-            <NavLink to="balance">Balance</NavLink>
-          </li>
-          <li>
-            <NavLink to="addNewClass">Add New Class</NavLink>
-          </li>
-          <li>
-            <NavLink to="manageSlots">Manage Slots</NavLink>
-          </li>
-          <li>
-            <NavLink to="addNewSlot">Add New Slot</NavLink>
-          </li>
-          <li>
-            <NavLink to="addNewForum">Add New Forum</NavLink>
-          </li>
-          <li>
-            <NavLink to="activityLogPage">Activity Log Page</NavLink>
-          </li>
-          <li>
-            <NavLink to="profile">Profile</NavLink>
-          </li>
-          <li>
-            <NavLink to="recommendedClasses">Recommended Classes</NavLink>
-          </li>
-        </ul>
-      </div> */}
-      <div className="w-64 min-h-screen bg-green-600 p-4">
+      <div className="w-64 min-h-screen bg-emerald-500 p-4">
         <ul className="text-green-100 space-y-2">
           <li>
             <NavLink
