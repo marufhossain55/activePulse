@@ -1,4 +1,4 @@
 const Featured = () => {
-  return <div>Featured</div>;
+  return <div>Featured from new\ sadkfjasdklfjkl</div>;
 };
 export default Featured;

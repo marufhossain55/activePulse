@@ -9,7 +9,15 @@ const DashBoard = () => {
         <ul className="text-green-100 space-y-2">
           <li>
             <NavLink
-              to="allTrainers"
+              to="allNewsletterSubscribers"
+              className="block py-2 px-4 hover:bg-green-500 hover:text-white rounded transition duration-300"
+            >
+              News letterSubscribers
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/dashboard"
               className="block py-2 px-4 hover:bg-green-500 hover:text-white rounded transition duration-300"
             >
               All Trainers

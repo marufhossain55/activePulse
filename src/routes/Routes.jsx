@@ -63,7 +63,8 @@ export const router = createBrowserRouter([
         element: <AllNewsletterSubscribers />,
       },
 
-      { path: 'allTrainers', element: <AllTrainers /> },
+      // { path: 'allTrainers', element: <AllTrainers /> },
+      { index: true, element: <AllTrainers /> },
 
       {
         path: 'appliedTrainer',
