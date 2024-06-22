@@ -1,7 +1,8 @@
 import { NavLink, Outlet } from 'react-router-dom';
+import useAdmin from '../hooks/useAdmin';
 
 const DashBoard = () => {
-  const isAdmin = true;
+  const [isAdmin] = useAdmin();
   return (
     <div className="flex container mx-auto">
       <div className="w-64 min-h-screen bg-emerald-500 p-4">
