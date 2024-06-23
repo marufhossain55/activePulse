@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 
 const AppliedTrainer = () => {
   const axiosSecure = useAxiosSecure();
-  const { data: applications } = useQuery({
+  const { data: applications, refetch } = useQuery({
     queryKey: ['application'],
     queryFn: async () => {
       const res = await axiosSecure.get('/applyForTrainer', {
@@ -48,6 +48,7 @@ const AppliedTrainer = () => {
         });
       }
       closeModal();
+      refetch();
       // Optionally, refetch applications or update the state
     } catch (error) {
       console.error('Error confirming trainer:', error);
