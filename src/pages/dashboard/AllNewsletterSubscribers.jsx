@@ -14,7 +14,7 @@ const AllNewsletterSubscribers = () => {
       return res.data;
     },
   });
-  console.log(newsletterSubscribers);
+  // console.log(newsletterSubscribers);
   return (
     // <div className="container mx-auto p-6 bg-gray-100 rounded-lg shadow-lg">
     //   <h2 className="text-2xl font-bold  text-gray-800 text-center mb-16">
