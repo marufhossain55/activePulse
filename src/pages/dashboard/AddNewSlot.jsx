@@ -1,147 +1,169 @@
+import React, { useState, useEffect } from 'react';
+import Select from 'react-select';
+import axios from 'axios';
+import Swal from 'sweetalert2';
+import useAxiosSecure from '../../hooks/useAxiosSecure';
+
 const AddNewSlot = () => {
-  return const axiosSecure = useAxiosSecure();
-  const { data: applications, refetch } = useQuery({
-    queryKey: ['application'],
-    queryFn: async () => {
-      const res = await axiosSecure.get('/applyForTrainer', {
+  const axiosSecure = useAxiosSecure();
+  const [previousData, setPreviousData] = useState({});
+  const [selectedDays, setSelectedDays] = useState([]);
+  const [slotName, setSlotName] = useState('');
+  const [slotTime, setSlotTime] = useState('');
+  const [selectedClasses, setSelectedClasses] = useState([]);
+  const [classesOptions, setClassesOptions] = useState([]);
+
+  useEffect(() => {
+    const fetchTrainerData = async () => {
+      try {
+        const res = await axiosSecure.get('/getTrainerData', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('access-token')}`,
+          },
+        });
+        setPreviousData(res.data);
+        setSelectedDays(
+          res.data?.days?.map((day) => ({ value: day, label: day }))
+        );
+      } catch (error) {
+        console.error('Error fetching trainer data:', error);
+      }
+    };
+
+    fetchTrainerData();
+  }, [axiosSecure]);
+
+  useEffect(() => {
+    const fetchClasses = async () => {
+      try {
+        const res = await axiosSecure.get('/getClasses', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('access-token')}`,
+          },
+        });
+        const classesData = res.data?.map((classItem) => ({
+          value: classItem.name,
+          label: classItem.name,
+        }));
+        setClassesOptions(classesData);
+      } catch (error) {
+        console.error('Error fetching classes:', error);
+      }
+    };
+
+    fetchClasses();
+  }, [axiosSecure]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const newSlotData = {
+      slotName,
+      slotTime,
+      days: selectedDays?.map((day) => day.value),
+      classes: selectedClasses?.map((classItem) => classItem.value),
+    };
+
+    try {
+      const res = await axiosSecure.post('/addNewSlot', newSlotData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('access-token')}`,
         },
       });
-      return res.data;
-    },
-  });
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedApplication, setSelectedApplication] = useState(null);
-
-  const openModal = (application) => {
-    setSelectedApplication(application);
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setSelectedApplication(null);
-  };
-
-  const confirmTrainer = async (selectedApplication) => {
-    console.log(selectedApplication.email);
-    try {
-      const res = await axiosSecure.post(
-        `/confirmTrainer/${selectedApplication.email}`
-      );
-      console.log(res.data);
       if (res.data.acknowledged) {
         Swal.fire({
           position: 'top-end',
           icon: 'success',
-          title: 'trainer accepted',
+          title: 'New slot added successfully',
           showConfirmButton: false,
           timer: 1500,
         });
       }
-      closeModal();
-      refetch();
-      // Optionally, refetch applications or update the state
     } catch (error) {
-      console.error('Error confirming trainer:', error);
-    }
-  };
-
-  const rejectTrainer = async (id) => {
-    try {
-      await axiosSecure.post(`/reject-trainer/${id}`);
-      closeModal();
-      // Optionally, refetch applications or update the state
-    } catch (error) {
-      console.error('Error rejecting trainer:', error);
+      console.error('Error adding new slot:', error);
     }
   };
 
   return (
-    <div>
-      <h1 className="text-center text-3xl font-bold mt-20">Applied Trainer</h1>
-      <div className="container mx-auto p-6">
-        <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
-          <thead className="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
-            <tr>
-              <th className="py-3 px-6 text-left">SN</th>
-              <th className="py-3 px-6 text-left">Name</th>
-              <th className="py-3 px-6 text-left">Email</th>
-              <th className="py-3 px-6 text-left">Action</th>
-            </tr>
-          </thead>
-          <tbody className="text-gray-600 text-sm font-light">
-            {applications?.map((application, idx) => (
-              <tr
-                key={application._id}
-                className="border-b border-gray-200 hover:bg-gray-100"
-              >
-                <td className="py-3 px-6 text-left whitespace-nowrap">
-                  <div className="flex items-center">
-                    <span className="font-medium">{idx + 1}</span>
-                  </div>
-                </td>
-                <td className="py-3 px-6 text-left">
-                  <div className="flex items-center">
-                    <span>{application.name}</span>
-                  </div>
-                </td>
-                <td className="py-3 px-6 text-left">
-                  <div className="flex items-center">
-                    <span>{application.email}</span>
-                  </div>
-                </td>
-                <td className="py-3 px-6 text-left">
-                  <div className="flex items-center">
-                    <span
-                      className="border border-emerald-600 bg-emerald-400 px-4 py-2 rounded cursor-pointer"
-                      onClick={() => openModal(application)}
-                    >
-                      <FaEye size={24} />
-                    </span>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {isModalOpen && selectedApplication && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-opacity duration-300 ease-in-out">
-          <div className="bg-white p-6 rounded-lg relative transform transition-transform duration-300 ease-in-out scale-95">
-            <button
-              onClick={closeModal}
-              className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
-            >
-              <FaTimes size={20} />
-            </button>
-            <h2 className="text-xl font-semibold mb-2">
-              {selectedApplication.name}
-            </h2>
-            <p className="text-gray-600 mb-4">{selectedApplication.email}</p>
-            {/* Add other application details here if needed */}
-            <div className="flex justify-end mt-4">
-              <button
-                onClick={() => confirmTrainer(selectedApplication)}
-                className="bg-green-500 text-white px-4 py-2 rounded mr-2 hover:bg-green-600"
-              >
-                Confirm
-              </button>
-              <button
-                onClick={() => rejectTrainer(selectedApplication._id)}
-                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-              >
-                Reject
-              </button>
-            </div>
-          </div>
+    <div className="container mx-auto p-6">
+      <h1 className="text-center text-3xl font-bold mt-20">Add New Slot</h1>
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white p-6 rounded-lg shadow-md mt-8"
+      >
+        <div className="mb-4">
+          <label className="block text-gray-700 font-bold mb-2">
+            Previous Data
+          </label>
+          <textarea
+            readOnly
+            value={JSON.stringify(previousData, null, 2)}
+            className="w-full p-2 border border-gray-300 rounded"
+          />
         </div>
-      )}
+        <div className="mb-4">
+          <label className="block text-gray-700 font-bold mb-2">
+            Select Days
+          </label>
+          <Select
+            isMulti
+            options={[
+              { value: 'Monday', label: 'Monday' },
+              { value: 'Tuesday', label: 'Tuesday' },
+              { value: 'Wednesday', label: 'Wednesday' },
+              { value: 'Thursday', label: 'Thursday' },
+              { value: 'Friday', label: 'Friday' },
+              { value: 'Saturday', label: 'Saturday' },
+              { value: 'Sunday', label: 'Sunday' },
+            ]}
+            value={selectedDays}
+            onChange={setSelectedDays}
+            className="w-full"
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700 font-bold mb-2">
+            Slot Name
+          </label>
+          <input
+            type="text"
+            value={slotName}
+            onChange={(e) => setSlotName(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded"
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700 font-bold mb-2">
+            Slot Time
+          </label>
+          <input
+            type="text"
+            value={slotTime}
+            onChange={(e) => setSlotTime(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded"
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700 font-bold mb-2">
+            Classes Include
+          </label>
+          <Select
+            isMulti
+            options={classesOptions}
+            value={selectedClasses}
+            onChange={setSelectedClasses}
+            className="w-full"
+          />
+        </div>
+        <button
+          type="submit"
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        >
+          Add Slot
+        </button>
+      </form>
     </div>
   );
 };
-};
+
 export default AddNewSlot;
