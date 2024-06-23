@@ -65,7 +65,7 @@ const AllNewsletterSubscribers = () => {
     //   </p>
     // </div>
     <div>
-      <h1 className="text-center text-3xl font-bold mt-20">All Subscriberss</h1>
+      <h1 className="text-center text-3xl font-bold mt-20">All Subscribers</h1>
       <div className="container mx-auto p-6">
         <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
           <thead className="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
