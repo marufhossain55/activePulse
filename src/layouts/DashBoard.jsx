@@ -8,11 +8,12 @@ const DashBoard = () => {
   const [isTrainer] = useTrainer();
   const [isMember] = useMember();
   console.log(isAdmin);
+
   return (
     <div className="flex container mx-auto">
       <div className="w-64 min-h-screen bg-emerald-500 p-4">
         <ul className="text-green-100 space-y-2">
-          {/* {isAdmin ? (
+          {isAdmin ? (
             <>
               <li>
                 <NavLink
@@ -118,19 +119,11 @@ const DashBoard = () => {
                 </NavLink>
               </li>
               <div class="border-t border-gray-300 w-full my-4"></div>
-              <li>
-                <NavLink
-                  to="/"
-                  className="block py-2 px-4 hover:bg-green-500 hover:text-white rounded transition duration-300"
-                >
-                  Home
-                </NavLink>
-              </li>
             </>
           ) : (
             ''
-          )} */}
-          <li>
+          )}
+          {/* <li>
             <NavLink
               to="allNewsletterSubscribers"
               className="block py-2 px-4 hover:bg-green-500 hover:text-white rounded transition duration-300"
@@ -219,6 +212,14 @@ const DashBoard = () => {
             </NavLink>
           </li>
           <div class="border-t border-gray-300 w-full my-4"></div>
+          <li>
+            <NavLink
+              to="/"
+              className="block py-2 px-4 hover:bg-green-500 hover:text-white rounded transition duration-300"
+            >
+              Home
+            </NavLink>
+          </li> */}
           <li>
             <NavLink
               to="/"
