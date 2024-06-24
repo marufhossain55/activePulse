@@ -20,6 +20,9 @@ import RecommendedClasses from '../pages/dashboard/RecommendedClasses';
 import AllNewsletterSubscribers from '../pages/dashboard/AllNewsletterSubscribers';
 import AddNewForum from '../pages/dashboard/AddNewForum';
 import PrivateRoute from './PrivateRoute';
+import TrainerDetails from '../components/TrainerDetails';
+import BecomeTrainer from '../components/BecomeTrainer';
+import BookingPage from '../components/BookingPage';
 
 export const router = createBrowserRouter([
   {
@@ -48,6 +51,9 @@ export const router = createBrowserRouter([
         path: 'forums',
         element: <Forums />,
       },
+      { path: '/trainer/:id', element: <TrainerDetails /> },
+      { path: '/become-trainer', element: <BecomeTrainer /> },
+      { path: '/book/:trainerId/:slotId', element: <BookingPage /> },
     ],
   },
   {
