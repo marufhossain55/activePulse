@@ -1,5 +1,14 @@
 # ActivePulse
 
+# Live Link : https://bright-custard-f0624f.netlify.app
+
+# How to Run this Project
+
+- clone or Download
+- npm i
+- npm run dev
+
+
 # admin credentials
 
 - email:admin@gmail.com
@@ -28,3 +37,11 @@
 - **Robust Admin and Trainer Features**: Admins can manage newsletter subscribers, trainers, and classes, while Trainers can manage slots and contribute to community forums, creating a dynamic and interactive fitness ecosystem.
 
 - **Personalized Member Experience**: Members enjoy a tailored dashboard with an activity log for trainer applications, a customizable profile page, and a smart class recommendation system, enhancing user engagement and satisfaction.
+
+  # used technology
+    - react.js
+    - javaScript
+    - mongoDD
+    - node.js
+    - express.js
+    - tailwind CSS
