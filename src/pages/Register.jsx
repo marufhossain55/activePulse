@@ -4,7 +4,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import Swal from 'sweetalert2';
 import useAxiosPublic from '../hooks/useAxiosPublic';
-
 const Register = () => {
   const axiosPublic = useAxiosPublic();
   const { createUser, updateUserProfile } = useAuth();

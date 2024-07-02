@@ -20,9 +20,11 @@ import RecommendedClasses from '../pages/dashboard/RecommendedClasses';
 import AllNewsletterSubscribers from '../pages/dashboard/AllNewsletterSubscribers';
 import AddNewForum from '../pages/dashboard/AddNewForum';
 import PrivateRoute from './PrivateRoute';
-import TrainerDetails from '../components/TrainerDetails';
-import BecomeTrainer from '../components/BecomeTrainer';
+
 import BookingPage from '../components/BookingPage';
+import TrainerDetails from '../components/allTrainers/TrainerDetails';
+import TrainerBooking from '../components/allTrainers/TrainerBooking';
+import BecomeATrainer from '../components/allTrainers/BecomeATrainer';
 
 export const router = createBrowserRouter([
   {
@@ -51,9 +53,25 @@ export const router = createBrowserRouter([
         path: 'forums',
         element: <Forums />,
       },
-      { path: '/trainer/:id', element: <TrainerDetails /> },
-      { path: '/become-trainer', element: <BecomeTrainer /> },
-      { path: '/book/:trainerId/:slotId', element: <BookingPage /> },
+      // { path: '/trainer/:id', element: <TrainerDetails /> },
+      // { path: '/become-trainer', element: <BecomeTrainer /> },
+      // { path: '/book/:trainerId/:slotId', element: <BookingPage /> },
+      {
+        path: '/allTrainer/:id',
+        element: <TrainerDetails />,
+      },
+      {
+        path: 'trainerBooking',
+        element: <TrainerBooking />,
+      },
+      {
+        path: 'becomeATrainer',
+        element: (
+          <PrivateRoute>
+            <BecomeATrainer />,
+          </PrivateRoute>
+        ),
+      },
     ],
   },
   {

@@ -20,6 +20,8 @@ const AppliedTrainer = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedApplication, setSelectedApplication] = useState(null);
+  const [isRejectionModalOpen, setIsRejectionModalOpen] = useState(false);
+  const [rejectionFeedback, setRejectionFeedback] = useState('');
 
   const openModal = (application) => {
     setSelectedApplication(application);
@@ -31,13 +33,15 @@ const AppliedTrainer = () => {
     setSelectedApplication(null);
   };
 
+  const openRejectionModal = () => {
+    setIsRejectionModalOpen(true);
+  };
+
   const confirmTrainer = async (selectedApplication) => {
-    console.log(selectedApplication.email);
     try {
       const res = await axiosSecure.post(
         `/confirmTrainer/${selectedApplication.email}`
       );
-      console.log(res.data);
       if (res.data.acknowledged) {
         Swal.fire({
           position: 'top-end',
@@ -49,17 +53,27 @@ const AppliedTrainer = () => {
       }
       closeModal();
       refetch();
-      // Optionally, refetch applications or update the state
     } catch (error) {
       console.error('Error confirming trainer:', error);
     }
   };
 
-  const rejectTrainer = async (id) => {
+  const rejectTrainer = async (id, feedback) => {
     try {
-      await axiosSecure.post(`/reject-trainer/${id}`);
+      await axiosSecure.post(`/rejectTrainer/${selectedApplication.email}`, {
+        feedback,
+      });
       closeModal();
-      // Optionally, refetch applications or update the state
+      setIsRejectionModalOpen(false);
+      setRejectionFeedback('');
+      refetch();
+      Swal.fire({
+        position: 'top-end',
+        icon: 'info',
+        title: 'Trainer application rejected',
+        showConfirmButton: false,
+        timer: 1500,
+      });
     } catch (error) {
       console.error('Error rejecting trainer:', error);
     }
@@ -137,10 +151,43 @@ const AppliedTrainer = () => {
                 Confirm
               </button>
               <button
-                onClick={() => rejectTrainer(selectedApplication._id)}
+                onClick={openRejectionModal}
                 className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
               >
                 Reject
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {isRejectionModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-opacity duration-300 ease-in-out">
+          <div className="bg-white p-6 rounded-lg relative transform transition-transform duration-300 ease-in-out scale-95">
+            <button
+              onClick={() => setIsRejectionModalOpen(false)}
+              className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
+            >
+              <FaTimes size={20} />
+            </button>
+            <h2 className="text-xl font-semibold mb-2">Reject Application</h2>
+            <p className="text-gray-600 mb-4">
+              Please provide feedback for rejection:
+            </p>
+            <textarea
+              value={rejectionFeedback}
+              onChange={(e) => setRejectionFeedback(e.target.value)}
+              className="w-full h-32 p-2 border rounded"
+              placeholder="Enter rejection feedback..."
+            ></textarea>
+            <div className="flex justify-end mt-4">
+              <button
+                onClick={() =>
+                  rejectTrainer(selectedApplication._id, rejectionFeedback)
+                }
+                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+              >
+                Submit Rejection
               </button>
             </div>
           </div>

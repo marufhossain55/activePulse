@@ -1,147 +1,94 @@
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import useAxiosPublic from '../hooks/useAxiosPublic';
+
 const Forums = () => {
-  return const axiosSecure = useAxiosSecure();
-  const { data: applications, refetch } = useQuery({
-    queryKey: ['application'],
+  const axiosPublic = useAxiosPublic();
+  const [currentPage, setCurrentPage] = useState(1);
+  const postsPerPage = 6;
+
+  const { data: forumPosts, refetch } = useQuery({
+    queryKey: ['allForumPosts'],
     queryFn: async () => {
-      const res = await axiosSecure.get('/applyForTrainer', {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('access-token')}`,
-        },
-      });
+      const res = await axiosPublic.get('/forumPost');
       return res.data;
     },
   });
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedApplication, setSelectedApplication] = useState(null);
+  // Get current posts
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const currentPosts = forumPosts?.slice(indexOfFirstPost, indexOfLastPost);
 
-  const openModal = (application) => {
-    setSelectedApplication(application);
-    setIsModalOpen(true);
-  };
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setSelectedApplication(null);
-  };
-
-  const confirmTrainer = async (selectedApplication) => {
-    console.log(selectedApplication.email);
-    try {
-      const res = await axiosSecure.post(
-        `/confirmTrainer/${selectedApplication.email}`
-      );
-      console.log(res.data);
-      if (res.data.acknowledged) {
-        Swal.fire({
-          position: 'top-end',
-          icon: 'success',
-          title: 'trainer accepted',
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      }
-      closeModal();
-      refetch();
-      // Optionally, refetch applications or update the state
-    } catch (error) {
-      console.error('Error confirming trainer:', error);
+  // Calculate page numbers
+  const pageNumbers = [];
+  if (forumPosts) {
+    for (let i = 1; i <= Math.ceil(forumPosts.length / postsPerPage); i++) {
+      pageNumbers.push(i);
     }
-  };
-
-  const rejectTrainer = async (id) => {
-    try {
-      await axiosSecure.post(`/reject-trainer/${id}`);
-      closeModal();
-      // Optionally, refetch applications or update the state
-    } catch (error) {
-      console.error('Error rejecting trainer:', error);
-    }
-  };
+  }
 
   return (
-    <div>
-      <h1 className="text-center text-3xl font-bold mt-20">Applied Trainer</h1>
-      <div className="container mx-auto p-6">
-        <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
-          <thead className="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
-            <tr>
-              <th className="py-3 px-6 text-left">SN</th>
-              <th className="py-3 px-6 text-left">Name</th>
-              <th className="py-3 px-6 text-left">Email</th>
-              <th className="py-3 px-6 text-left">Action</th>
-            </tr>
-          </thead>
-          <tbody className="text-gray-600 text-sm font-light">
-            {applications?.map((application, idx) => (
-              <tr
-                key={application._id}
-                className="border-b border-gray-200 hover:bg-gray-100"
-              >
-                <td className="py-3 px-6 text-left whitespace-nowrap">
-                  <div className="flex items-center">
-                    <span className="font-medium">{idx + 1}</span>
-                  </div>
-                </td>
-                <td className="py-3 px-6 text-left">
-                  <div className="flex items-center">
-                    <span>{application.name}</span>
-                  </div>
-                </td>
-                <td className="py-3 px-6 text-left">
-                  <div className="flex items-center">
-                    <span>{application.email}</span>
-                  </div>
-                </td>
-                <td className="py-3 px-6 text-left">
-                  <div className="flex items-center">
-                    <span
-                      className="border border-emerald-600 bg-emerald-400 px-4 py-2 rounded cursor-pointer"
-                      onClick={() => openModal(application)}
-                    >
-                      <FaEye size={24} />
-                    </span>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {isModalOpen && selectedApplication && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-opacity duration-300 ease-in-out">
-          <div className="bg-white p-6 rounded-lg relative transform transition-transform duration-300 ease-in-out scale-95">
-            <button
-              onClick={closeModal}
-              className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
-            >
-              <FaTimes size={20} />
-            </button>
-            <h2 className="text-xl font-semibold mb-2">
-              {selectedApplication.name}
-            </h2>
-            <p className="text-gray-600 mb-4">{selectedApplication.email}</p>
-            {/* Add other application details here if needed */}
-            <div className="flex justify-end mt-4">
-              <button
-                onClick={() => confirmTrainer(selectedApplication)}
-                className="bg-green-500 text-white px-4 py-2 rounded mr-2 hover:bg-green-600"
-              >
-                Confirm
-              </button>
-              <button
-                onClick={() => rejectTrainer(selectedApplication._id)}
-                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-              >
-                Reject
-              </button>
+    <div className="container mx-auto px-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        {currentPosts?.map((post) => (
+          <div
+            key={post._id}
+            className="bg-white rounded-lg shadow-md overflow-hidden"
+          >
+            <div className="p-6">
+              <div className="flex justify-between items-start mb-4">
+                <h2 className="text-xl font-bold text-gray-800">
+                  {post.title}
+                </h2>
+                {post.role && (
+                  <span
+                    className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                      post.role === 'admin'
+                        ? 'bg-red-500 text-white'
+                        : 'bg-blue-500 text-white'
+                    }`}
+                  >
+                    {post.role === 'admin' ? 'Admin' : 'Trainer'}
+                  </span>
+                )}
+              </div>
+              <p className="text-gray-600 mb-4">{post.content}</p>
+              <div className="flex justify-between items-center text-sm text-gray-500">
+                <span>{post.name}</span>
+                <span>{post.email}</span>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        ))}
+      </div>
+
+      {/* Pagination */}
+      <div className="flex justify-center mt-8">
+        <nav>
+          <ul className="flex space-x-2">
+            {pageNumbers.map((number) => (
+              <li key={number}>
+                <button
+                  onClick={() => paginate(number)}
+                  className={`px-3 py-1 rounded ${
+                    currentPage === number
+                      ? 'bg-blue-500 text-white'
+                      : 'bg-gray-200 text-gray-700'
+                  }`}
+                >
+                  {number}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
     </div>
   );
 };
-};
+
 export default Forums;
